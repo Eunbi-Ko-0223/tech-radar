@@ -1,0 +1,4 @@
+anthropic>=0.40
+arxiv>=2.1
+requests>=2.31
+pymupdf>=1.24

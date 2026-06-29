@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>반도체 기술 레이더 · Semiconductor Tech Radar</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand">
+        <span class="logo">📡</span>
+        <div>
+          <h1>반도체 기술 레이더</h1>
+          <p class="tagline">매일 아침, 오늘 꼭 알아야 할 반도체 논문 한 편</p>
+        </div>
+      </div>
+      <div class="brand-company">SK하이닉스</div>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+    <!-- 오늘의 논문 / 선택한 날짜의 논문 -->
+    <section id="paper-pane" class="paper-pane">
+      <!-- JS가 채움 -->
+    </section>
+
+    <!-- 아카이브 -->
+    <aside class="archive">
+      <div class="archive-head">
+        <h2>아카이브</h2>
+        <div class="view-toggle">
+          <button id="btn-cal" class="active">달력</button>
+          <button id="btn-list">리스트</button>
+        </div>
+      </div>
+      <div id="calendar-view"></div>
+      <div id="list-view" class="hidden"></div>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>arXiv 수집 · AI 선별/통역 · Semantic Scholar 학습패키지 — 정적 사이트(API 키 미노출)</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

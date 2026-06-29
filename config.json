@@ -1,0 +1,62 @@
+{
+  "company": {
+    "name": "SK하이닉스",
+    "perspective": "메모리 반도체 제조사(HBM, DRAM, NAND 주력)의 사업 전략 실무자",
+    "business_areas": [
+      "HBM (고대역폭 메모리)",
+      "DRAM (DDR5, LPDDR, 서버용 메모리)",
+      "NAND 플래시 / SSD",
+      "CXL 메모리 / 메모리 확장",
+      "PIM (Processing-in-Memory)",
+      "어드밴스드 패키징 (TSV, 2.5D/3D)"
+    ],
+    "competitors": ["삼성전자", "마이크론(Micron)", "인텔", "엔비디아(고객이자 수요처)"]
+  },
+
+  "arxiv": {
+    "categories": ["cs.AR", "cs.ET", "eess.SY", "cond-mat.mes-hall", "physics.app-ph"],
+    "clear_terms": [
+      "HBM", "high bandwidth memory", "DRAM", "3D NAND", "NAND flash",
+      "EUV lithography", "FinFET", "gate-all-around", "GAAFET",
+      "TSV", "through-silicon via", "chiplet", "advanced packaging",
+      "processing-in-memory", "compute-in-memory", "CXL memory",
+      "MRAM", "ReRAM", "phase change memory", "ferroelectric memory"
+    ],
+    "ambiguous_terms": [
+      {"term": "memory", "anchors": ["wafer", "transistor", "fabrication", "semiconductor", "DRAM", "SRAM"]},
+      {"term": "scaling", "anchors": ["transistor", "node", "lithography", "CMOS"]},
+      {"term": "packaging", "anchors": ["chip", "die", "wafer", "interconnect"]}
+    ],
+    "lookback_days": 30,
+    "max_fetch": 120,
+    "max_candidates": 60
+  },
+
+  "rubric": {
+    "weights": {
+      "business":    0.25,
+      "threat":      0.20,
+      "demand":      0.20,
+      "maturity":    0.15,
+      "credibility": 0.10,
+      "novelty":     0.10
+    },
+    "signal_boost": {
+      "_comment": "위협/수요 신호가 강하면(>=4) 가산점 → 위기·기회 자동 상위 추천",
+      "threshold": 4,
+      "bonus": 1.0
+    },
+    "min_score": {
+      "_comment": "풀의 최고점이 이 값 미만이면 '오늘은 추천 없음' 처리 (품질 기준선)",
+      "value": 2.0
+    },
+    "trendy_mode": true,
+    "trendy_extra_novelty_weight": 0.05
+  },
+
+  "models": {
+    "_comment": "비용 최소화 — 점수화는 저렴한 Haiku, 깊은 통역은 1편만 Sonnet",
+    "scoring": "claude-haiku-4-5-20251001",
+    "deep": "claude-sonnet-4-6"
+  }
+}

@@ -1,0 +1,58 @@
+name: Daily Tech Radar
+
+# 매일 한국시간 08:00에 자동 실행 (GitHub cron은 UTC 기준 → 23:00 UTC = 08:00 KST)
+# 수동 실행(workflow_dispatch)도 가능 — Actions 탭에서 "Run workflow" 버튼.
+on:
+  schedule:
+    - cron: "0 23 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write      # 생성된 결과(output, data.js)를 저장소에 커밋
+  pages: write         # GitHub Pages 배포
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 의존성 설치
+        run: pip install -r requirements.txt
+
+      - name: 오늘의 논문 생성 (수집 → 선별 → 통역)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}   # 클라우드 금고에서 자동 주입
+        run: python main.py
+
+      - name: 정적 사이트 데이터 빌드
+        run: python build_site.py
+
+      - name: 결과를 저장소에 커밋 (추천 기록 = 아카이브 DB)
+        run: |
+          git config user.name "tech-radar-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add output site/data.js
+          git commit -m "chore: daily update ($(date -u +%Y-%m-%d))" || echo "변경 없음"
+          git push
+
+      - name: Pages 아티팩트 업로드
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: GitHub Pages 배포
+        id: deployment
+        uses: actions/deploy-pages@v4
