@@ -67,27 +67,27 @@ def run(dry_run=False):
     today = datetime.date.today().isoformat()
     print(f"\n=== 반도체 기술 레이더 · {today} ===\n")
 
-    # ── 1단계: 수집 (그물) ──
+    # ── 멱등성: 오늘 이미 처리했으면 건너뜀(매일 1편/재실행 시 덮어쓰기 방지) ──
+    today_file = os.path.join(HERE, "output", f"{today}.json")
+    if not dry_run and os.path.exists(today_file):
+        print(f"오늘({today})은 이미 처리되었습니다 → 건너뜁니다.")
+        print(f"  (다시 돌리려면 {today_file} 삭제 후 재실행)")
+        return
+
+    # ── 1단계: 수집 (그물) — 최근 30일 스냅샷 ──
     candidates = fetch.fetch_candidates(cfg)
     if not candidates:
         print("수집된 논문이 없습니다. (검색어/기간을 조정해 보세요)")
         return
 
-    # ── 중복 방지: 이미 추천한 논문은 후보에서 제외(채점 전에 빼 비용도 절감) ──
-    seen = recommended_ids()
-    if seen:
-        before = len(candidates)
-        candidates = [c for c in candidates if c["arxiv_id"] not in seen]
-        print(f"[중복방지] 이미 추천한 {len(seen)}편 제외 → 후보 {before}→{len(candidates)}편")
-    if not candidates:
-        print("새로 추천할 논문이 없습니다. (최근 30일 후보를 모두 추천함)")
-        return
+    seen = recommended_ids()  # 이미 추천된 논문(추천완료 DB)
 
     if dry_run:
-        print("\n[--dry-run] 수집된 후보 (LLM 선별 전):\n")
-        for i, p in enumerate(candidates, 1):
+        preview = [c for c in candidates if c["arxiv_id"] not in seen]
+        print("\n[--dry-run] 수집된 후보 (이미 추천한 것 제외):\n")
+        for i, p in enumerate(preview, 1):
             print(f"{i:2d}. [{p['published']}] {p['title']}")
-        print("\n→ API 키를 설정하면 이 후보들을 점수화해 오늘의 1편을 골라줍니다.")
+        print("\n→ API 키를 설정하면 신규만 점수화해 오늘의 1편을 골라줍니다.")
         return
 
     # 여기부터는 LLM 필요
@@ -100,33 +100,48 @@ def run(dry_run=False):
 
     import analyze
     import learning
+    import pool as poolmod
 
-    # ── 2단계: 선별 (체) — 후보별 점수화 ──
-    print("\n[선별] 후보 논문 점수화 중...")
-    scored = []
-    for i, p in enumerate(candidates, 1):
+    lookback = cfg["arxiv"].get("lookback_days", 30)
+    min_score = cfg["rubric"].get("min_score", {}).get("value", 0)
+
+    # ── 후보 풀 DB 갱신 ──
+    pool = poolmod.load_pool()
+    # 이미 추천된 논문이 풀에 남아있으면 제거(안전)
+    for aid in [a for a in pool if a in seen]:
+        del pool[aid]
+    removed_old = poolmod.prune_old(pool, lookback)  # 30일 지난 미추천 제거
+
+    # ── 2단계: 선별 (체) — 신규 논문만 채점(증분) ──
+    new_papers = [c for c in candidates
+                  if c["arxiv_id"] not in pool and c["arxiv_id"] not in seen]
+    print(f"\n[선별] 캐시 재사용 {len(pool)}편 · 만료 제거 {removed_old}편 · "
+          f"신규 채점 {len(new_papers)}편")
+    for i, p in enumerate(new_papers, 1):
         try:
             r = analyze.score_paper(cfg, p)
         except Exception as e:
-            print(f"  {i:2d}. 점수화 실패({e}) — 건너뜀")
+            print(f"  신규 {i:2d}. 점수화 실패({e}) — 건너뜀")
             continue
         p["analysis"] = r
+        p["first_seen"] = today
+        pool[p["arxiv_id"]] = p
         mark = "✓" if r.get("is_relevant") else "✗(무관)"
-        print(f"  {i:2d}. {mark} score={r['final_score']:>5} [{r.get('tag','-')}] {p['title'][:55]}")
-        if r.get("is_relevant"):
-            scored.append(p)
+        print(f"  신규 {i:2d}. {mark} score={r['final_score']:>5} [{r.get('tag','-')}] {p['title'][:50]}")
+    poolmod.save_pool(pool)  # 채점 결과 캐싱
 
-    if not scored:
-        print("\n반도체 관련 논문이 없었습니다. (오늘은 추천 없음)")
+    # ── best pick 선정: 풀에서 관련 있는 것 중 최고점 ──
+    candidates_scored = [p for p in pool.values()
+                         if p.get("analysis", {}).get("is_relevant")]
+    if not candidates_scored:
+        print("\n풀에 관련 논문이 없습니다 → 오늘은 추천 없음 ☕")
+        save_skip(today, 0, min_score)
         return
 
-    # ── best pick 선정 ──
-    scored.sort(key=lambda p: p["analysis"]["final_score"], reverse=True)
-    winner = scored[0]
+    winner = max(candidates_scored, key=lambda p: p["analysis"]["final_score"])
+    top = winner["analysis"]["final_score"]
 
     # ── 품질 기준선: 최고점조차 기준 미만이면 '오늘은 추천 없음' ──
-    min_score = cfg["rubric"].get("min_score", {}).get("value", 0)
-    top = winner["analysis"]["final_score"]
     if top < min_score:
         print(f"\n[기준선] 최고점 {top} < 기준선 {min_score} → 오늘은 추천 없음 ☕ "
               "(억지 추천 대신 쉬어가기)")
@@ -160,6 +175,11 @@ def run(dry_run=False):
         "deep": deep,
     }
     save_and_report(record)
+
+    # ── 추천된 논문을 풀에서 제거 → 추천완료 DB(output)로 '옮겨감' ──
+    pool.pop(winner["arxiv_id"], None)
+    poolmod.save_pool(pool)
+    print(f"[풀] 추천작을 후보 풀에서 제거 (남은 후보 {len(pool)}편)")
 
 
 def save_skip(date, top_score, min_score):
