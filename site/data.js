@@ -506,5 +506,87 @@ window.RADAR_DATA = {
       ],
       "reading_order": "TPU v1 원조 논문(2017)으로 기본 개념을 잡은 뒤 TPU v4 논문(2023)으로 SparseCore·광학 스위치를 이해하고, 마지막으로 이 보고서를 읽으면 5세대 전체 흐름이 자연스럽게 연결됩니다."
     }
+  },
+  "2026-06-30": {
+    "date": "2026-06-30",
+    "track": "반도체",
+    "paper": {
+      "title": "Memory-Centric Computing: Security Benefits and Challenges of Processing-in-DRAM",
+      "authors": [
+        "Ismail Emir Yuksel",
+        "F. Nisa Bostanci",
+        "Ataberk Olgun",
+        "Onur Mutlu"
+      ],
+      "published": "2026-06-18",
+      "url": "http://arxiv.org/abs/2606.20786v1",
+      "arxiv_id": "2606.20786"
+    },
+    "tag": "기회",
+    "scores": {
+      "business": 5,
+      "threat": 2,
+      "demand": 4,
+      "maturity": 2,
+      "credibility": 5,
+      "novelty": 4
+    },
+    "final_score": 4.85,
+    "based_on": "abstract",
+    "deep": {
+      "summary_sections": [
+        {
+          "heading": "데이터를 옮기지 말고, 메모리가 직접 계산하게 하라 (PIM)",
+          "body": "지금 컴퓨터는 데이터를 메모리(DRAM)에서 CPU로 옮겨와 계산하는데, AI처럼 데이터가 많은 작업은 이 ‘옮기는 과정’에서 시간·전력의 대부분을 써버립니다(폰노이만 병목). 이 논문은 발상을 뒤집어, 메모리(DRAM) 안에서 직접 계산하게 하는 ‘Processing-in-DRAM’을 다룹니다. 데이터를 옮기지 않으니 훨씬 빠르고 전력 효율적이죠."
+        },
+        {
+          "heading": "메모리가 계산까지 하면, 보안은 득이자 실",
+          "body": "메모리를 ‘저장만 하는 곳’에서 ‘계산도 하는 곳’으로 바꾸면 보안에 양면성이 생긴다고 짚습니다. 좋은 점: DRAM으로 진짜 난수(TRNG)나 칩 고유 지문(PUF) 같은 새 보안 기능을 만들 수 있어요. 나쁜 점: 읽기 교란이 심해지거나 새로운 정보 유출 경로가 생길 수 있어요. PIM은 강력하지만 신뢰성·보안 설계를 함께 가져가야 합니다."
+        }
+      ],
+      "key_terms": [
+        {
+          "term": "PIM / Processing-in-DRAM",
+          "explain": "메모리(DRAM) 안에서 직접 연산을 수행하는 기술로, 데이터 이동을 줄여 속도와 전력을 크게 개선합니다."
+        },
+        {
+          "term": "폰노이만 병목",
+          "explain": "CPU와 메모리 사이에서 데이터를 주고받는 데 시간·전력이 몰리는 구조적 한계입니다."
+        },
+        {
+          "term": "메모리 중심 컴퓨팅",
+          "explain": "계산을 데이터(메모리)가 있는 곳으로 가져가는 새 패러다임입니다."
+        },
+        {
+          "term": "TRNG(진성 난수 생성기)",
+          "explain": "예측 불가능한 진짜 난수를 만드는 장치로, 보안의 기초가 됩니다."
+        },
+        {
+          "term": "PUF(물리적 복제방지 기능)",
+          "explain": "칩마다 다른 물리적 특성을 ‘지문’처럼 활용하는 보안 기술입니다."
+        }
+      ],
+      "implication_sections": [
+        {
+          "heading": "PIM은 SK하이닉스의 미래 먹거리 — 직접 사업영역",
+          "body": "SK하이닉스는 이미 PIM 제품(예: GDDR6 기반 AiM)을 개발하며 PIM을 차세대 사업으로 보고 있습니다. 이 논문은 ‘AI 시대에 데이터 이동이 진짜 병목’임을 보여주며 메모리가 계산까지 떠안는 PIM의 당위성을 뒷받침합니다. 단순 메모리를 넘어 ‘연산하는 메모리’로 가치를 키울 기회 신호입니다."
+        },
+        {
+          "heading": "기회를 잡으려면 신뢰성·보안이 전제",
+          "body": "다만 논문은 PIM이 읽기 교란 악화·정보 유출 같은 새 리스크도 동반함을 경고합니다. PIM 제품을 상용화하려면 이런 신뢰성·보안 문제를 함께 풀어야 하고, 그걸 먼저 해결하는 회사가 시장을 선점합니다."
+        }
+      ],
+      "background_papers": [
+        {
+          "title": "Processing-in-Memory: A Workload-Driven Perspective (Mutlu et al.)",
+          "why": "PIM이 왜 필요하고 어디에 쓰이는지 큰 그림을 먼저 잡을 수 있습니다."
+        },
+        {
+          "title": "RowHammer 및 DRAM read disturbance 서베이",
+          "why": "이 논문이 경고하는 PIM의 신뢰성·보안 리스크 배경을 이해할 수 있습니다."
+        }
+      ],
+      "reading_order": "폰노이만 병목·PIM 개념 → PIM 개관 논문 → DRAM 교란 배경 → 본 논문 순으로 보면 ‘PIM의 약속과 리스크’가 함께 이해됩니다."
+    }
   }
 };
