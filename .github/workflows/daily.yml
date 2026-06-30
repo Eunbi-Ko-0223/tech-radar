@@ -1,10 +1,12 @@
 name: Daily Tech Radar
 
-# 매일 한국시간 06:00에 자동 실행 (GitHub cron은 UTC 기준 → 21:00 UTC = 06:00 KST)
+# 평일(KST 월~금) 한국시간 06:00에 자동 실행.
+# GitHub cron은 UTC 기준 → 21:00 UTC = 06:00 KST 다음날. 따라서 KST 월~금은
+# UTC 일~목(0-4)에 해당. (요일/주말 최종 판단은 main.py가 KST로 다시 확인)
 # 수동 실행(workflow_dispatch)도 가능 — Actions 탭에서 "Run workflow" 버튼.
 on:
   schedule:
-    - cron: "0 21 * * *"
+    - cron: "0 21 * * 0-4"
   workflow_dispatch: {}
 
 permissions:

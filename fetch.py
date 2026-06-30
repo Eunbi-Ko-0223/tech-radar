@@ -73,24 +73,28 @@ def _fetch_track(query, cap, cutoff, client, track, verbose):
     return []
 
 
-def fetch_candidates(cfg, verbose=True):
-    """반도체 트랙 + AI 전방시장 트랙을 각자 상한으로 수집해 합친다(중복 제거)."""
+def fetch_candidates(cfg, track=None, verbose=True):
+    """후보 논문을 수집한다. track="AI" 또는 "반도체"면 해당 트랙만, None이면 둘 다.
+    각 트랙은 자체 상한을 가진다(AI가 반도체를 밀어내지 않도록)."""
     a = cfg["arxiv"]
     lookback = a.get("lookback_days", 30)
     cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=lookback)
     client = arxiv.Client(page_size=50, delay_seconds=5, num_retries=3)
+    do_semi = track in (None, "all", "반도체")
+    do_ai = track in (None, "all", "AI") and a.get("ai_categories") and a.get("ai_terms")
     if verbose:
-        print(f"[fetch] 기간: 최근 {lookback}일 (>= {cutoff.date()})")
+        print(f"[fetch] 기간: 최근 {lookback}일 (>= {cutoff.date()}) / 트랙: {track or '전체'}")
 
+    papers = []
     # ── 반도체 트랙 ──
-    semi_q = build_query(a["categories"], a["clear_terms"], a.get("ambiguous_terms"))
-    papers = _fetch_track(semi_q, a.get("max_candidates", 60), cutoff, client, "반도체", verbose)
+    if do_semi:
+        semi_q = build_query(a["categories"], a["clear_terms"], a.get("ambiguous_terms"))
+        papers += _fetch_track(semi_q, a.get("max_candidates", 60), cutoff, client, "반도체", verbose)
 
-    # ── AI 전방시장 트랙 (설정 있을 때만) ──
-    if a.get("ai_categories") and a.get("ai_terms"):
+    # ── AI 전방시장 트랙 ──
+    if do_ai:
         ai_q = build_query(a["ai_categories"], a["ai_terms"], None)
         ai_papers = _fetch_track(ai_q, a.get("ai_max_candidates", 25), cutoff, client, "AI", verbose)
-        # 중복 제거(반도체 트랙 우선), arxiv_id 기준
         have = {p["arxiv_id"] for p in papers}
         for p in ai_papers:
             if p["arxiv_id"] not in have:

@@ -66,11 +66,29 @@ def recommended_ids():
 KST = datetime.timezone(datetime.timedelta(hours=9))
 
 
+# 요일별 트랙: 월/수/금 = AI 전방시장, 화/목 = 반도체. 주말은 미발행.
+# (Python weekday(): 월0 화1 수2 목3 금4 토5 일6)
+AI_DAYS = {0, 2, 4}
+SEMI_DAYS = {1, 3}
+
+
 def run(dry_run=False):
     load_env()
     cfg = load_config()
-    today = datetime.datetime.now(KST).date().isoformat()
-    print(f"\n=== 반도체 기술 레이더 · {today} (KST) ===\n")
+    now_kst = datetime.datetime.now(KST)
+    today = now_kst.date().isoformat()
+    weekday = now_kst.weekday()
+    print(f"\n=== 반도체 테크레터 · {today} (KST) ===\n")
+
+    # ── 주말 미발행: 출근일(월~금)에만 발행 ──
+    if weekday in AI_DAYS:
+        track = "AI"
+    elif weekday in SEMI_DAYS:
+        track = "반도체"
+    else:
+        print("주말에는 테크레터를 발행하지 않습니다 (출근길 셔틀용 — 평일만). ☕")
+        return
+    print(f"오늘은 [{track}] 트랙입니다.")
 
     # ── 멱등성: 오늘 이미 처리했으면 건너뜀(매일 1편/재실행 시 덮어쓰기 방지) ──
     today_file = os.path.join(HERE, "output", f"{today}.json")
@@ -79,8 +97,8 @@ def run(dry_run=False):
         print(f"  (다시 돌리려면 {today_file} 삭제 후 재실행)")
         return
 
-    # ── 1단계: 수집 (그물) — 최근 30일 스냅샷 ──
-    candidates = fetch.fetch_candidates(cfg)
+    # ── 1단계: 수집 (그물) — 오늘 트랙만, 최근 30일 ──
+    candidates = fetch.fetch_candidates(cfg, track=track)
     if not candidates:
         print("수집된 논문이 없습니다. (검색어/기간을 조정해 보세요)")
         return
@@ -135,11 +153,13 @@ def run(dry_run=False):
         print(f"  신규 {i:2d}. {mark} score={r['final_score']:>5} [{r.get('tag','-')}] {p['title'][:50]}")
     poolmod.save_pool(pool)  # 채점 결과 캐싱
 
-    # ── best pick 선정: 풀에서 관련 있는 것 중 최고점 ──
+    # ── best pick 선정: 풀에서 '오늘 트랙'의 관련 논문 중 최고점 ──
+    # (track 필드 없는 과거 항목은 반도체로 간주 — 반도체 전용 시절 데이터)
     candidates_scored = [p for p in pool.values()
-                         if p.get("analysis", {}).get("is_relevant")]
+                         if p.get("analysis", {}).get("is_relevant")
+                         and p.get("track", "반도체") == track]
     if not candidates_scored:
-        print("\n풀에 관련 논문이 없습니다 → 오늘은 추천 없음 ☕")
+        print(f"\n풀에 [{track}] 관련 논문이 없습니다 → 오늘은 추천 없음 ☕")
         save_skip(today, 0, min_score)
         return
 
@@ -172,6 +192,7 @@ def run(dry_run=False):
 
     record = {
         "date": today,
+        "track": track,
         "paper": {k: winner[k] for k in ("title", "authors", "published", "url", "arxiv_id")},
         "tag": winner["analysis"]["tag"],
         "scores": winner["analysis"]["scores"],

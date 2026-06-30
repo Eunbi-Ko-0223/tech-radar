@@ -64,7 +64,7 @@
     pane.innerHTML = `
       <div class="eyebrow">
         <span class="tag ${tag}">${tag}</span>
-        <span class="date">${esc(date)} · ${isToday ? "오늘의 논문" : "지난 추천"}</span>
+        <span class="date">${esc(date)} · ${isToday ? "오늘의 논문" : "지난 추천"}${rec.track ? ` · ${esc(rec.track)} 트랙` : ""}</span>
       </div>
       <h2 class="paper-title">${esc(rec.paper.title)}</h2>
       <div class="paper-meta">
