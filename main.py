@@ -62,7 +62,7 @@ def recommended_ids():
 
 
 # 한국시간(KST = UTC+9, 서머타임 없음). GitHub 서버는 UTC라, 날짜를 KST로 계산해야
-# 'cron 23:00 UTC = 08:00 KST' 실행 시 날짜가 하루 밀리지 않는다.
+# 'cron 21:00 UTC = 06:00 KST' 실행 시 날짜가 하루 밀리지 않는다.
 KST = datetime.timezone(datetime.timedelta(hours=9))
 
 
