@@ -99,7 +99,7 @@ body {
 .score-row { display: grid; grid-template-columns: 92px 1fr 26px; align-items: center; gap: 10px; font-size: 13px; }
 .score-row .lab { color: var(--muted); }
 .bar { background: #eef0f3; border-radius: 999px; height: 9px; overflow: hidden; }
-.bar > span { display: block; height: 100%; background: linear-gradient(90deg, #2f2f35, #6f6f78); border-radius: 999px; }
+.bar > span { display: block; height: 100%; background: linear-gradient(90deg, #82828b, #b6b6be); border-radius: 999px; }
 .score-row .val { text-align: right; font-weight: 700; color: var(--ink); }
 
 /* 학습 패키지 */
