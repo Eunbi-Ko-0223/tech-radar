@@ -2,6 +2,7 @@
 1단계 (재현율 우선) — arXiv에서 반도체 관련 후보 논문을 '넓게' 긁어온다.
 설계 원칙: arXiv 쿼리 = 그물(넓게), LLM = 체(정밀하게, analyze.py 담당)
 """
+import time
 import datetime
 import arxiv
 
@@ -49,28 +50,38 @@ def fetch_candidates(cfg, verbose=True):
         sort_by=arxiv.SortCriterion.SubmittedDate,
         sort_order=arxiv.SortOrder.Descending,
     )
-    client = arxiv.Client(page_size=50, delay_seconds=3, num_retries=3)
+    client = arxiv.Client(page_size=50, delay_seconds=5, num_retries=3)
 
-    papers = []
-    for r in client.results(search):
-        if r.published < cutoff:
-            break  # 정렬되어 있으므로 여기부터는 모두 기간 밖
-        arxiv_id = r.entry_id.split("/abs/")[-1].split("v")[0]
-        papers.append({
-            "arxiv_id": arxiv_id,
-            "title": r.title.strip().replace("\n", " "),
-            "abstract": r.summary.strip().replace("\n", " "),
-            "authors": [au.name for au in r.authors],
-            "published": r.published.strftime("%Y-%m-%d"),
-            "primary_category": r.primary_category,
-            "url": r.entry_id,
-        })
-        if len(papers) >= a.get("max_candidates", 60):
-            break  # 안전 상한
+    # arXiv가 일시적으로 429(요청 과다) 등을 줄 수 있으므로, 백오프 재시도 후
+    # 그래도 실패하면 빈 목록을 반환해 작업 전체가 죽지 않게 한다(그날만 건너뜀).
+    for attempt in range(1, 4):
+        try:
+            papers = []
+            for r in client.results(search):
+                if r.published < cutoff:
+                    break  # 정렬되어 있으므로 여기부터는 모두 기간 밖
+                arxiv_id = r.entry_id.split("/abs/")[-1].split("v")[0]
+                papers.append({
+                    "arxiv_id": arxiv_id,
+                    "title": r.title.strip().replace("\n", " "),
+                    "abstract": r.summary.strip().replace("\n", " "),
+                    "authors": [au.name for au in r.authors],
+                    "published": r.published.strftime("%Y-%m-%d"),
+                    "primary_category": r.primary_category,
+                    "url": r.entry_id,
+                })
+                if len(papers) >= a.get("max_candidates", 60):
+                    break  # 안전 상한
+            if verbose:
+                print(f"[fetch] 후보 논문 {len(papers)}편 수집 완료 (최근 {lookback}일)")
+            return papers
+        except Exception as e:
+            wait = 30 * attempt
+            print(f"[fetch] arXiv 요청 실패({type(e).__name__}: {e}) — {wait}s 후 재시도 {attempt}/3")
+            time.sleep(wait)
 
-    if verbose:
-        print(f"[fetch] 후보 논문 {len(papers)}편 수집 완료 (최근 {lookback}일)")
-    return papers
+    print("[fetch] arXiv 반복 실패 — 빈 목록 반환(오늘은 건너뜀)")
+    return []
 
 
 if __name__ == "__main__":
