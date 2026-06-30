@@ -182,8 +182,9 @@ def _judge_quality(cfg, paper, deep):
   "verdict":"pass" 또는 "revise",
   "critique":"어느 문장/부분이 일반론·군더더기인지 콕 집고, 무엇을 더 구체적·비자명하게 바꿔야 하는지 2~4문장. pass면 빈 문자열."}}
 판정 규칙: 네 축이 모두 4점 이상이면 verdict=pass, 하나라도 3점 이하이면 revise."""
+    judge_model = cfg["models"].get("judge") or cfg["models"]["deep"]
     try:
-        r = _ask_json(cfg["models"]["deep"], prompt, max_tokens=700, temperature=0.2)
+        r = _ask_json(judge_model, prompt, max_tokens=700, temperature=0.2)
     except Exception as e:
         print(f"[심사] 편집장 호출 실패({e}) — 통과 처리")
         return True, ""

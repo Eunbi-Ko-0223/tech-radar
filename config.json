@@ -70,8 +70,9 @@
   },
 
   "models": {
-    "_comment": "비용 최소화 — 점수화는 저렴한 Haiku, 깊은 통역은 1편만 Sonnet",
+    "_comment": "점수화=Haiku(저렴), 통역=Opus(품질), 심사=Sonnet(판정엔 충분·비용절감)",
     "scoring": "claude-haiku-4-5-20251001",
-    "deep": "claude-sonnet-4-6"
+    "deep": "claude-opus-4-8",
+    "judge": "claude-sonnet-4-6"
   }
 }
