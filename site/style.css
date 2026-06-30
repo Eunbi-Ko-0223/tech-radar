@@ -148,5 +148,50 @@ body {
 
 .hidden { display: none; }
 
-.site-footer { border-top: 1px solid var(--line); padding: 18px 0; }
-.site-footer p { margin: 0; font-size: 12px; color: var(--muted); text-align: center; }
+/* ===== 인터랙션: 스무스 + 살짝 재미있게 (절제된 모션) ===== */
+
+/* 논문 패널: 선택할 때마다 부드럽게 떠오르며 등장 */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.paper-pane.enter { animation: fadeUp 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+/* 점수 막대: 0에서 목표치까지 스르륵 차오름 */
+.bar > span { transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* 리스트: 페이지 넘길 때 가볍게 페이드인 */
+.list-items.anim { animation: fadeUp 0.3s ease; }
+
+/* 호버 마이크로 인터랙션 */
+.list-item { transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease; }
+.list-item:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); }
+
+.cal-cell { transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease; }
+.cal-cell.has:hover { transform: scale(1.14); }
+
+.term { transition: border-color 0.18s ease, transform 0.18s ease; }
+.term:hover { border-color: var(--accent); transform: translateX(3px); }
+
+.bg-paper { transition: transform 0.18s ease; }
+.pkg:hover .bg-paper { transform: translateX(2px); }
+
+.paper-meta a { transition: color 0.15s ease; }
+
+/* 버튼 누르는 손맛 */
+.view-toggle button, .cal-head button, .list-pager button { transition: transform 0.12s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
+.view-toggle button:active, .cal-head button:active, .list-pager button:active { transform: scale(0.92); }
+.cal-head button:hover, .list-pager button:not(:disabled):hover { background: #ececee; }
+
+/* 블록 제목 아이콘: 호버 시 살짝 통통 */
+.block h3 .ic { display: inline-block; transition: transform 0.2s ease; }
+.block:hover h3 .ic { transform: scale(1.18) rotate(-4deg); }
+
+/* 리스트 페이지네이션 컨트롤 */
+.list-pager { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 12px; }
+.list-pager button { border: 1px solid var(--line); background: #fff; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 15px; color: var(--ink); }
+.list-pager button:disabled { opacity: 0.35; cursor: default; }
+.list-pager span { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+
+/* 모션 민감 사용자 배려 */
+@media (prefers-reduced-motion: reduce) {
+  .paper-pane.enter, .list-items.anim { animation: none; }
+  .bar > span { transition: none; }
+}

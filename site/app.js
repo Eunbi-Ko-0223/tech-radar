@@ -5,6 +5,9 @@
   const latest = dates[dates.length - 1];
   let selected = latest;
 
+  const LIST_PAGE_SIZE = 5;   // 리스트는 한 페이지에 5개만
+  let listPage = 0;           // 현재 리스트 페이지(0-based)
+
   const SCORE_LABELS = {
     business: "사업연관성", threat: "위협신호", demand: "수요신호",
     maturity: "성숙도", credibility: "출처신뢰도", novelty: "신규성",
@@ -15,29 +18,36 @@
   const esc = (t) => (t == null ? "" : String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])));
 
   // ---------- 논문 패널 ----------
+  // 모든 분기에서 이걸로 내용을 넣어 '부드러운 등장' 애니메이션을 재생한다.
+  function setPane(html) {
+    const pane = $("#paper-pane");
+    pane.innerHTML = html;
+    pane.classList.remove("enter");
+    void pane.offsetWidth;           // 리플로우 강제 → 애니메이션 재시작
+    pane.classList.add("enter");
+  }
+
   function renderPaper(date) {
     const rec = DATA[date];
-    const pane = $("#paper-pane");
     if (!rec) {
-      pane.innerHTML = `<div class="eyebrow"><span class="date">${esc(date)}</span></div>
-        <p class="summary">이 날은 추천된 논문이 없습니다. ☕<br>(품질 기준선 미달 — 억지 추천 대신 쉬어가는 날)</p>`;
+      setPane(`<div class="eyebrow"><span class="date">${esc(date)}</span></div>
+        <p class="summary">이 날은 추천된 논문이 없습니다. ☕<br>(품질 기준선 미달 — 억지 추천 대신 쉬어가는 날)</p>`);
       return;
     }
     if (rec.no_recommendation) {
-      pane.innerHTML = `
+      setPane(`
         <div class="eyebrow"><span class="tag 중립">추천 없음</span>
           <span class="date">${esc(date)} · 쉬어가는 날</span></div>
         <h2 class="paper-title">오늘은 추천할 만한 논문이 없어요 ☕</h2>
         <div class="block"><div class="summary">${esc(rec.reason || "품질 기준선 미달")}로 인해,
           억지로 별로인 논문을 추천하기보다 오늘은 쉬어갑니다.
-          내일 아침 더 좋은 논문으로 다시 찾아올게요!</div></div>`;
+          내일 아침 더 좋은 논문으로 다시 찾아올게요!</div></div>`);
       return;
     }
     const d = rec.deep || {};
     const tag = rec.tag || "중립";
     const isToday = date === latest;
 
-    // v2: 소제목+본문 구조 렌더. v1 데이터(문자열)면 그대로 한 단락으로.
     const sectionsHTML = (sections, fallback) => {
       if (Array.isArray(sections) && sections.length)
         return sections.map(s =>
@@ -45,10 +55,11 @@
       return `<p>${esc(fallback)}</p>`;
     };
 
+    // 점수 막대는 0에서 시작해 목표치까지 자라나도록(grow) data-w에 목표 폭을 담는다.
     const scores = Object.entries(rec.scores || {}).map(([k, v]) => `
       <div class="score-row">
         <span class="lab">${SCORE_LABELS[k] || k}</span>
-        <span class="bar"><span style="width:${(v / 5) * 100}%"></span></span>
+        <span class="bar"><span style="width:0" data-w="${(v / 5) * 100}%"></span></span>
         <span class="val">${v}</span>
       </div>`).join("");
 
@@ -61,7 +72,7 @@
         + (d.reading_order ? `<div class="order">🧭 ${esc(d.reading_order)}</div>` : "")
       : `<div class="empty">${esc(d.reading_order) || "이 논문과 함께 볼 배경 논문은 아직 정리되지 않았어요."}</div>`;
 
-    pane.innerHTML = `
+    setPane(`
       <div class="eyebrow">
         <span class="tag ${tag}">${tag}</span>
         <span class="date">${esc(date)} · ${isToday ? "오늘의 논문" : "지난 추천"}${rec.track ? ` · ${esc(rec.track)} 트랙` : ""}</span>
@@ -86,14 +97,19 @@
 
       <div class="block"><h3><span class="ic">📊</span>평가 점수 (0~5)</h3>
         <div class="scores">${scores}</div></div>
-    `;
+    `);
+
+    // 점수 막대가 스르륵 차오르도록(두 번의 rAF로 확실히 트랜지션 발생)
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      $("#paper-pane").querySelectorAll(".bar > span").forEach(s => { s.style.width = s.dataset.w; });
+    }));
   }
 
-  // ---------- 달력 ----------
-  let calYear, calMonth; // 보고 있는 달
+  // ---------- 달력 (달력만 표시 — 아래에 별도 논문 리스트 없음) ----------
+  let calYear, calMonth;
   function initCalMonth() {
     const [y, m] = selected.split("-").map(Number);
-    calYear = y; calMonth = m - 1; // 0-based
+    calYear = y; calMonth = m - 1;
   }
   function renderCalendar() {
     const view = $("#calendar-view");
@@ -113,9 +129,9 @@
 
     view.innerHTML = `
       <div class="cal-head">
-        <button id="cal-prev">‹</button>
+        <button id="cal-prev" aria-label="이전 달">‹</button>
         <span>${calYear}년 ${calMonth + 1}월</span>
-        <button id="cal-next">›</button>
+        <button id="cal-next" aria-label="다음 달">›</button>
       </div>
       <div class="cal-grid">
         ${DOW.map(d => `<div class="dow">${d}</div>`).join("")}
@@ -128,27 +144,45 @@
       c.onclick = () => select(c.dataset.date));
   }
 
-  // ---------- 리스트 ----------
-  function renderList() {
-    const view = $("#list-view");
-    view.innerHTML = dates.slice().reverse().map(ds => {
-      const rec = DATA[ds];
-      const sel = ds === selected ? "sel" : "";
-      if (rec.no_recommendation) {
-        return `<div class="list-item ${sel}" data-date="${ds}">
-          <div class="li-date">${ds}</div>
-          <div class="li-title">☕ 추천 없음 (쉬어가는 날)</div>
-          <span class="tag 중립">없음</span>
-        </div>`;
-      }
+  // ---------- 리스트 (최신 5개씩 페이지네이션) ----------
+  function listItemHTML(ds) {
+    const rec = DATA[ds];
+    const sel = ds === selected ? "sel" : "";
+    if (rec.no_recommendation) {
       return `<div class="list-item ${sel}" data-date="${ds}">
         <div class="li-date">${ds}</div>
-        <div class="li-title">${esc(rec.paper.title)}</div>
-        <span class="tag ${rec.tag}">${rec.tag}</span>
+        <div class="li-title">☕ 추천 없음 (쉬어가는 날)</div>
+        <span class="tag 중립">없음</span>
       </div>`;
-    }).join("");
-    view.querySelectorAll(".list-item").forEach(it =>
-      it.onclick = () => select(it.dataset.date));
+    }
+    return `<div class="list-item ${sel}" data-date="${ds}">
+      <div class="li-date">${ds}</div>
+      <div class="li-title">${esc(rec.paper.title)}</div>
+      <span class="tag ${rec.tag}">${rec.tag}</span>
+    </div>`;
+  }
+
+  function renderList() {
+    const view = $("#list-view");
+    const all = dates.slice().reverse();                 // 최신 → 과거
+    const pages = Math.max(1, Math.ceil(all.length / LIST_PAGE_SIZE));
+    listPage = Math.min(Math.max(listPage, 0), pages - 1);
+    const start = listPage * LIST_PAGE_SIZE;
+    const slice = all.slice(start, start + LIST_PAGE_SIZE);   // 이 페이지의 5개만
+
+    const items = slice.map(listItemHTML).join("");
+    const pager = pages > 1 ? `
+      <div class="list-pager">
+        <button id="list-prev" ${listPage === 0 ? "disabled" : ""} aria-label="이전">‹</button>
+        <span>${listPage + 1} / ${pages}</span>
+        <button id="list-next" ${listPage === pages - 1 ? "disabled" : ""} aria-label="다음">›</button>
+      </div>` : "";
+
+    view.innerHTML = `<div class="list-items anim">${items}</div>${pager}`;
+    view.querySelectorAll(".list-item").forEach(it => it.onclick = () => select(it.dataset.date));
+    const prev = $("#list-prev"), next = $("#list-next");
+    if (prev) prev.onclick = () => { listPage--; renderList(); };   // 다음 페이지도 5개만 유지
+    if (next) next.onclick = () => { listPage++; renderList(); };
   }
 
   // ---------- 선택 변경 ----------
@@ -156,18 +190,20 @@
     selected = date;
     renderPaper(date);
     renderCalendar();
-    renderList();
+    renderList();   // listPage 유지 — 보던 페이지 그대로
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // ---------- 뷰 토글 ----------
+  // ---------- 뷰 토글 (전환 시 부드럽게 페이드인) ----------
   $("#btn-cal").onclick = () => {
     $("#btn-cal").classList.add("active"); $("#btn-list").classList.remove("active");
     $("#calendar-view").classList.remove("hidden"); $("#list-view").classList.add("hidden");
+    renderCalendar();
   };
   $("#btn-list").onclick = () => {
     $("#btn-list").classList.add("active"); $("#btn-cal").classList.remove("active");
     $("#list-view").classList.remove("hidden"); $("#calendar-view").classList.add("hidden");
+    renderList();
   };
 
   // ---------- 시작 ----------
