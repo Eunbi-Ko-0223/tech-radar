@@ -5014,5 +5014,313 @@
       "final_score": -1.0
     },
     "first_seen": "2026-07-01"
+  },
+  "2606.31554": {
+    "arxiv_id": "2606.31554",
+    "title": "In-situ Indexing via Memristive Content-Addressable Memory",
+    "abstract": "Processing-in-Memory (PIM) is a proven paradigm for overcoming the ``memory wall\". However, while data indexing is severely bottlenecked by this same wall, it remains unclear how indexing can effectively benefit from PIM's unique capabilities. We present PATH, an in-situ indexing architecture that bridges this gap by leveraging the massive parallelism and inherent data-movement of PIMs. Specifically, we first reformulate the fundamental indexing operations, namely Insert, Search, Update, and Delete, into highly parallel in-situ content-addressable memory operations executed directly within memory arrays. Taking hash indexes as a typical case, we elaborate how PATH breaks the inherent trade-off among memory accesses, load factor, and process latency in conventional hashing schemes. By adopting ultra-large logical buckets and in-memory moving, PATH virtually eliminates the cost of hash collision resolution and significantly reduces resizing overhead. Compared with state-of-the-art schemes, PATH achieves $4.7-7.8\\times$ higher throughput, $>14.5\\times$ lower tail latency, and $>61.4\\%$ fewer memory accesses under insertions, laying a scalable foundation for next-generation data-centric computing.",
+    "authors": [
+      "Bing Wu",
+      "Xueliang Wei",
+      "Shiyi Song",
+      "Yibo Liu",
+      "Jinpeng Liu",
+      "Wei Tong",
+      "Hao Tong",
+      "Yuchong Hu",
+      "Dan Feng"
+    ],
+    "published": "2026-06-30",
+    "primary_category": "cs.AR",
+    "track": "반도체",
+    "url": "http://arxiv.org/abs/2606.31554v1",
+    "analysis": {
+      "is_relevant": true,
+      "relevance_reason": "PIM 기반 인-메모리 인덱싱 아키텍처는 메모리월 극복과 데이터 중심 AI 인프라의 메모리 효율성을 직접 다루는 핵심 기술로, SK하이닉스의 PIM/CXL 전략과 AI 수요 시장에 실질적 영향을 미친다.",
+      "scores": {
+        "business": 4,
+        "threat": 1,
+        "demand": 4,
+        "maturity": 2,
+        "credibility": 3,
+        "novelty": 4
+      },
+      "tag": "기회",
+      "one_line": "AI 인프라의 메모리 병목(indexing/search)을 PIM으로 근본 해결하는 신패러다임으로, SK하이닉스의 PIM 차별화 가치와 HBM/CXL 수요를 강화하는 신호이나 아직 학술 단계로 상용화까지는 거리가 있다.",
+      "final_score": 4.2
+    },
+    "first_seen": "2026-07-02"
+  },
+  "2606.31535": {
+    "arxiv_id": "2606.31535",
+    "title": "PEERS: A Parallel and Exact Effective Resistance Solver via Implicit Inversion and Augmented Symbolic Analysis",
+    "abstract": "High-precision effective resistance computation is a cornerstone of Electronic Design Automation (EDA) sign-off, yet it remains a fundamental bottleneck in large-scale power grid analysis, spectral sparsification, and circuit reliability. Existing approaches face a prohibitive \"precision-memory impasse\": approximate methods lack the stringent accuracy required for high-stakes industrial sign-off, while exact methods either suffer from redundant query overheads or trigger $O(n^2)$ memory explosions. To resolve this, we propose PEERS, a Parallel and Exact Effective Resistance Solver powered by an implicit inverse computing model of the Cholesky factor. By integrating a state-inherited augmented depth-first search (DFS) with a dynamic query update mechanism, PEERS eliminates numerical redundancy and evaluates all-edge resistance queries in a single parallel sweep. We provide a rigorous Work-Span analysis, proving that for graphs satisfying an $O(n^α)$ separator theorem, PEERS achieves a theoretically optimal parallel span of $O(n^α)$ while strictly maintaining $O(nnz(L))$ space complexity. Numerical evaluations on industrial benchmarks demonstrate that PEERS achieves an average speedup of 83.3x over state-of-the-art parallel solvers under identical memory constraints. Notably, PEERS processes a 1-million-node industrial graph in just 18.8 seconds and scales to 17 million nodes in under an hour, providing the first computationally feasible path for exact all-edge resistance analysis in multi-million-gate designs.",
+    "authors": [
+      "Baiyu Chen",
+      "Lin Gan",
+      "Guangwen Yang",
+      "Wenjian Yu"
+    ],
+    "published": "2026-06-30",
+    "primary_category": "cs.AR",
+    "track": "반도체",
+    "url": "http://arxiv.org/abs/2606.31535v1",
+    "analysis": {
+      "is_relevant": true,
+      "relevance_reason": "전력 그리드 분석과 회로 신뢰성 검증은 고집적 메모리 칩(특히 HBM, 3D NAND, 어드밴스드 패키징)의 설계 검증 및 양산 sign-off에 필수적인 EDA 기술이다.",
+      "scores": {
+        "business": 3,
+        "threat": 1,
+        "demand": 2,
+        "maturity": 3,
+        "credibility": 3,
+        "novelty": 4
+      },
+      "tag": "중립",
+      "one_line": "메모리 칩 설계 검증 단계의 EDA 병목을 획기적으로 해결하는 기술이지만, 직접적인 메모리 수요 창출이나 제품 차별화 요소는 아니며 주로 내부 설계 효율성 개선에 기여한다.",
+      "final_score": 2.7
+    },
+    "first_seen": "2026-07-02"
+  },
+  "2606.31419": {
+    "arxiv_id": "2606.31419",
+    "title": "Fully compensated ferrimagnetic triferroics and multistate transport in hidden-phase wurtzite MnSe monolayer",
+    "abstract": "Fully compensated ferrimagnets (fFIMs) have attracted interest due to their compensated moments and nonrelativistic spin splitting across the Brillouin zone. Known fFIMs, however, are mostly restricted to complex three-dimensional (3D) systems or require external fields in two-dimensional (2D) heterostructures, leaving intrinsic fFIM monolayers unexplored. We identify a hidden-phase MnSe monolayer, derived from the (001) planes of wurtzite, as an intrinsic fFIM featuring inequivalent sublattices not linked by any symmetry. It is a unipolar magnetic semiconductor (UMS) with perpendicular magnetic anisotropy (528.60 * 10^-3 eV per unit cell) and simultaneously exhibits ferroelectricity (polarization 4.63 * 10^-10 C/m) and ferroelasticity (signal 61%), with barriers of 7.6 * 10^-3 and 0.10 eV/f.u., respectively, establishing a single-phase triferroic system. The ground fFIM UMS characteristics are robust against strain up to 3%. The In2Se3/MnSe heterostructure enables nonvolatile electrical control between semiconducting and metallic states. Constructed tunnel junctions exhibit giant tunneling magnetoresistance (2.98 * 10^5%), electroresistance (6.97 * 10^14%), elastoresistance (7.95 * 10^4%), and near-perfect spin filtering (~100%). Collectively, this spontaneous 2D fFIM with coexisting triferroic orders provides a promising platform for ultrahigh-density, low-power, and miniaturized memory devices.",
+    "authors": [
+      "Zhuang Ma",
+      "Hongfei Liang",
+      "Po Ma",
+      "Guangqian Ding",
+      "Xuehao Wu",
+      "Sikander Azam",
+      "Guoying Gao",
+      "Long Zhang"
+    ],
+    "published": "2026-06-30",
+    "primary_category": "physics.app-ph",
+    "track": "반도체",
+    "url": "http://arxiv.org/abs/2606.31419v1",
+    "analysis": {
+      "is_relevant": true,
+      "relevance_reason": "차세대 비휘발성 메모리 소자 플랫폼으로서 초고밀도·저전력 메모리 구현 가능성을 제시하며, 메모리 기술 로드맵의 대안 기술 영역에 해당.",
+      "scores": {
+        "business": 2,
+        "threat": 2,
+        "demand": 1,
+        "maturity": 1,
+        "credibility": 2,
+        "novelty": 4
+      },
+      "tag": "중립",
+      "one_line": "2D 강자성체 기반 다중 저항 메모리 원리는 흥미로우나, 현재 기초 이론 단계로 DRAM/NAND/HBM 주력 사업과의 직접 경쟁성은 낮고 상용화까지 10년 이상 소요될 가능성이 높음.",
+      "final_score": 2.05
+    },
+    "first_seen": "2026-07-02"
+  },
+  "2606.30591": {
+    "arxiv_id": "2606.30591",
+    "title": "Microfabricated Au and Au/graphene bilayer platelets for levitation experiments",
+    "abstract": "We describe a fabrication process for preparing liquid suspensions of micron-scale Au and Au/graphene bilayer platelets using thin-film deposition, optical lithography, ion milling, hydrofluoric acid (HF) substrate etching, and release from the substrate into a liquid suspension. Residual HF is removed through repeated centrifugation, decanting, and dilution cycles. The resulting suspension is characterized by electrospray deposition onto a secondary substrate, followed by electron and atomic force microscopy. The deposited platelets exhibit minimal aggregation, and the overall platelet yield reaches up to 30% of the platelets originally patterned on the wafer. Lateral force microscopy further confirms that the Au/graphene bilayer remains intact throughout fabrication, release, and electrospray deposition. This process provides a practical route for preparing high-quality platelet suspensions for levitated nanoparticle experiments and other applications requiring suspensions of two-dimensional nanostructures.",
+    "authors": [
+      "Sunghyun Kim",
+      "Joyce E. Coppock",
+      "B. E. Kane"
+    ],
+    "published": "2026-06-29",
+    "primary_category": "cond-mat.mes-hall",
+    "track": "반도체",
+    "url": "http://arxiv.org/abs/2606.30591v1",
+    "analysis": {
+      "is_relevant": false,
+      "relevance_reason": "마이크로스케일 금속/그래핀 플래이트릿의 부유 실험용 제조 공정으로, 메모리 반도체·AI 인프라·메모리 수요와 직접적인 연관성이 없음.",
+      "scores": {
+        "business": 0,
+        "threat": 0,
+        "demand": 0,
+        "maturity": 1,
+        "credibility": 2,
+        "novelty": 2
+      },
+      "tag": "중립",
+      "one_line": "기초 물리 실험(levitated nanoparticle)용 나노구조 제조 기법일 뿐, HBM/DRAM/NAND 사업, AI 메모리 수요, 패키징 기술과 무관한 순수 재료과학 논문.",
+      "final_score": -1.0
+    },
+    "first_seen": "2026-07-02"
+  },
+  "2606.30553": {
+    "arxiv_id": "2606.30553",
+    "title": "COSM: A Cooperative Scheduling Framework for Concurrent PIM and CPU Execution on Mobile Devices",
+    "abstract": "The development of on-device large language models (LLMs) is driven by the need for privacy and fast response times. Energy-intensive data transfer on mobile devices makes Processing-in-Memory (PIM) an effective solution. Due to stringent DRAM cost constraints, limited physical footprint on circuit boards, and the interaction between applications and LLMs, it is imperative for the CPU and PIM to operate concurrently within a shared memory space. However, challenges such as bank conflicts and bus congestion can arise, potentially diminishing the performance and energy benefits of PIM. To address this challenge, we introduce COSM, a cooperative scheduling framework designed to facilitate the concurrent operation of PIM and CPU tasks on mobile platforms. Our key innovations include: 1) a low-interference PIM control interface that generates the maximum number of PIM commands without disrupting CPU memory accesses; 2) an idleness-aware scheduling method that integrates PIM commands into available idle time windows within the CPU's access sequence. COSM not only hides PIM execution latency from the CPU, but also overlaps PIM execution with data transfer. Experiments on concurrent execution of LLMs and mobile workloads, including mobile applications and compute-intensive kernels, demonstrate that COSM improves PIM throughput by up to 2.8x compared to the baseline scheduling method with less than 2.0% CPU performance loss.",
+    "authors": [
+      "Yilong Zhao",
+      "Fangxin Liu",
+      "Onur Mutlu",
+      "Mingyu Gao",
+      "Jian Liu",
+      "Haibing Guan",
+      "Li Jiang"
+    ],
+    "published": "2026-06-29",
+    "primary_category": "cs.AR",
+    "track": "반도체",
+    "url": "http://arxiv.org/abs/2606.30553v2",
+    "analysis": {
+      "is_relevant": true,
+      "relevance_reason": "PIM(Processing-in-Memory) 기술의 모바일 온디바이스 LLM 실행 최적화로, SK하이닉스의 PIM 사업 전략과 AI 추론 메모리 수요 변화에 직접 연관.",
+      "scores": {
+        "business": 4,
+        "threat": 1,
+        "demand": 4,
+        "maturity": 3,
+        "credibility": 4,
+        "novelty": 3
+      },
+      "tag": "기회",
+      "one_line": "모바일 온디바이스 LLM 추론 시대에 PIM의 실질적 성능·에너지 이득을 극대화하는 스케줄링 기법으로, 엣지 AI 메모리 수요 증가와 PIM 상용화 경로를 보여주는 중요한 신호.",
+      "final_score": 4.3
+    },
+    "first_seen": "2026-07-02"
+  },
+  "2606.30039": {
+    "arxiv_id": "2606.30039",
+    "title": "Mega: A 22 nm Convolutional Spiking Neural Network Accelerator Achieving 0.375 pJ/SOP for Efficient Edge Vision",
+    "abstract": "Convolutional Spiking Neural Networks (SNN) offer the potential for highly energy-efficient vision processing by exploiting sparse, event-driven computation. However, existing SNN accelerators underutilize the inherent parallelism of convolutional layers and lack the flexibility to accommodate varying memory demands and input sparsity across layers. This paper presents Mega, a digital architecture for convolutional SNNs that addresses these limitations through three key contributions: (1) highly parallel acceleration of $3 \\times 3$ convolutions, (2) a unified data memory for spikes, neuron states, and weights, and (3) efficient spike map processing with low-overhead spike detection. Fabricated in GlobalFoundries 22 nm FDSOI technology, Mega achieves an energy efficiency of 0.375 pJ/SOP, improving the state of the art by $4\\times$.",
+    "authors": [
+      "Rick Luiken",
+      "Manil Dev Gomony",
+      "Sander Stuijk"
+    ],
+    "published": "2026-06-29",
+    "primary_category": "cs.AR",
+    "track": "반도체",
+    "url": "http://arxiv.org/abs/2606.30039v1",
+    "analysis": {
+      "is_relevant": true,
+      "relevance_reason": "엣지 AI 비전 처리의 에너지 효율 혁신으로 저전력 메모리 수요 패턴 변화를 시사하며, PIM/신경망 가속기 아키텍처 트렌드를 반영",
+      "scores": {
+        "business": 2,
+        "threat": 1,
+        "demand": 3,
+        "maturity": 2,
+        "credibility": 2,
+        "novelty": 3
+      },
+      "tag": "중립",
+      "one_line": "SNN 기반 엣지 AI 가속기는 흥미로운 저전력 패러다임이지만, SK하이닉스의 HBM/DRAM/NAND 주력 사업과의 직접 연관성은 제한적이며 아직 학계 프로토타입 수준으로 상용 영향은 미미함",
+      "final_score": 2.25
+    },
+    "first_seen": "2026-07-02"
+  },
+  "2606.29729": {
+    "arxiv_id": "2606.29729",
+    "title": "Atomically Thin Amorphous Carbon with an Ultralow Dielectric Constant",
+    "abstract": "Two-dimensional (2D) materials exhibit excellent properties at monolayer thickness and are viable replacements for various microelectronic components as scaling gradually approaches the atomic limit. Despite significant advancements in the ongoing 2D revolution of integrated circuits, one crucial building block, namely a 2D ultralow-k (ULK) dielectric, remains unreported. The challenge lies in achieving a dielectric constant less than 3, as traditional low-k dielectrics are inherently unstable at the 2D limit due to their amorphous or porous nature. The realisation of ultrathin dielectrics with low-k is also needed to address current bottlenecks in integrated circuits scaling. Specifically, low-k materials are necessary to minimise parasitic capacitances as the distance between conductive elements shrinks below 10 nm. Moreover, advanced architectures like gate-all-around field effect transistors (GAA FET) require even lower dielectric constants (k<2) at sub-3nm thickness. Here, we show that layer-by-layer grown multilayer amorphous carbon (ML-AC), as thin as 0.8 nm, is a mechanically robust 2D ULK dielectric with k of 1.35 and dielectric strength of 28-31 MV cm-1. The lack of any long-range order, its intrinsic 2D nature, sp2 carbon character and low density are all essential for minimising dielectric permittivity. Moreover, ML-AC overcomes the vulnerability of existing dielectrics to ion diffusion degradation with a record metal ion diffusion time to failure (TTF) of 10^10 s for even a single layer. Therefore, otherwise necessary additional layers occupying up to 3 nm can be eliminated, which is especially significant as metal line widths approach 10 nm. Combined with its low-temperature, direct and conformal growth even on a dielectric, these critical features enable substantial improvements in silicon-based semiconductor electronics and ensure compatibility with future 2D electronics.",
+    "authors": [
+      "Chee-Tat Toh",
+      "Artem K. Grebenko",
+      "Ugur Karadeniz",
+      "Usha Bhat",
+      "Ya He",
+      "Hongji Zhang",
+      "Denis V. Vyalikh",
+      "Anna Makarova",
+      "Alexander Fedorov",
+      "Alena A. Alekseeva",
+      "Kostya Iakoubovskii",
+      "Lu Shi",
+      "Andrei Starkov",
+      "Chuan Chu Tee",
+      "Lucas M. Sassi",
+      "Michel Bosman",
+      "Naoto Kamiuchi",
+      "Yuta Sato",
+      "Kazutomo Suenaga",
+      "Barbaros Oezyilmaz"
+    ],
+    "published": "2026-06-29",
+    "primary_category": "cond-mat.mtrl-sci",
+    "track": "반도체",
+    "url": "http://arxiv.org/abs/2606.29729v1",
+    "analysis": {
+      "is_relevant": true,
+      "relevance_reason": "극저유전상수(k=1.35) 2D 유전체 소재는 10nm 이하 미세공정에서 기생 용량을 최소화하고 GAA FET 등 차세대 소자 아키텍처를 가능하게 하는 핵심 인터커넥트 기술로, 메모리 및 로직 칩의 미세화 한계 극복에 직결됨.",
+      "scores": {
+        "business": 3,
+        "threat": 2,
+        "demand": 4,
+        "maturity": 2,
+        "credibility": 3,
+        "novelty": 4
+      },
+      "tag": "기회",
+      "one_line": "AI 인프라 고성능화를 위한 극미세 메모리/로직 칩의 필수 재료 기술이지만, 아직 기초 연구 단계로 상용화까지 3~5년 이상 소요될 것으로 예상되며 우리의 어드밴스드 패키징·PIM 전략과 보완적 가치를 가짐.",
+      "final_score": 4.15
+    },
+    "first_seen": "2026-07-02"
+  },
+  "2606.28837": {
+    "arxiv_id": "2606.28837",
+    "title": "A Comprehensive Design Framework for Vertical Power Delivery in High-Performance Computing",
+    "abstract": "Power delivery -- including high-to-low voltage conversion, complex power distribution across heterogeneously integrated chiplets, and efficient interconnect allocation -- remains a critical bottleneck in high-performance computing (HPC) systems. Existing vertical power delivery (VPD) solutions are estimated to achieve less than 70\\% system-wide end-to-end power delivery efficiency, defined from platform input power to delivered on-chip load power, with substantial energy lost as heat before reaching on-chip point-of-loads (POLs). In the absence of systematic design methodologies, evaluating power quality, exploring architectural alternatives, and optimizing performance rely on computationally prohibitive simulations, resulting in suboptimal designs. This paper introduces an end-to-end scalable power delivery framework for HPC systems, including distributed VPD (DVPD) architecture, DVPD design optimization methodology, and analytical models. The framework leverages substrate-embedded GaN power switches together with arrays of unit inductors and capacitors tailored for HPC applications. Multi-stage power conversion schemes (48V-to-1V, 48V-to-24V-to-1V, and 48V-to-12V-to-1V) are explored, with system-wide voltage drops and power losses evaluated under steady-state conditions. Design specifications for passive and active devices are formulated to meet next-generation efficiency targets. For the 48V-to-1V case, the proposed DVPD approach achieves 84\\% system-wide efficiency while occupying 54\\% of the area beneath the load system, with efficiency increasing to 87.6\\% at 75\\% area utilization across a 1--50~kW load range. Furthermore, steady-state voltage drops peak at 2.7\\% and transient drops at 9\\% (without decoupling capacitors), demonstrating the viability of DVPD for future wafer-scale HPC platforms.",
+    "authors": [
+      "Sriharini Krishnakumar",
+      "Yaroslav Popryho",
+      "Mingeun Choi",
+      "Ramin Rahimzadeh Khorasani",
+      "Madhavan Swaminathan",
+      "Satish Kumar",
+      "Inna Partin-Vaisband"
+    ],
+    "published": "2026-06-27",
+    "primary_category": "eess.SY",
+    "track": "반도체",
+    "url": "http://arxiv.org/abs/2606.28837v1",
+    "analysis": {
+      "is_relevant": true,
+      "relevance_reason": "HPC/AI 시스템의 수직 전력 공급 효율화는 고대역폭 메모리(HBM)와 어드밴스드 패키징(TSV, 2.5D/3D) 기반 칩렛 통합 시스템의 핵심 설계 제약이며, 메모리 전력 소비 최적화와 직결됨.",
+      "scores": {
+        "business": 4,
+        "threat": 1,
+        "demand": 4,
+        "maturity": 3,
+        "credibility": 4,
+        "novelty": 3
+      },
+      "tag": "기회",
+      "one_line": "HBM/칩렛 기반 AI 인프라의 전력 효율 병목을 해결하는 시스템 아키텍처 프레임워크로, 차세대 고밀도 패키징 설계에서 우리의 경쟁력 강화에 직접 기여할 수 있는 기술.",
+      "final_score": 4.3
+    },
+    "first_seen": "2026-07-02"
+  },
+  "2606.28754": {
+    "arxiv_id": "2606.28754",
+    "title": "SHIFT: Dynamic Compute Relocation Framework for Communication-Aware Chiplet-Based Systems",
+    "abstract": "The increasing communication complexity of large-scale heterogeneous systems has motivated runtime methodologies for communication-aware workload placement and routing optimization. These communication limitations are addressed in this paper by proposing SHIFT, a novel topology-agnostic approach that transfers compute node context and data to a more suitably positioned node, rather than only shifting data as in conventional networks-on-chip. The proposed strategy is evaluated on a chiplet-based architecture utilizing a fine-pitch integration platform featuring multiple bandwidth-domains for heterogeneous workloads. The proposed architecture employs multi-layered routing between functional or memory chiplets and utility chiplets, which serve as intelligent nodes for routing and compute relocation. Adaptive scheduling and routing utilize a modified shortest-path algorithm for large-scale systems, complemented by a lightweight ML-assisted policy that infers traffic conditions to improve adaptivity. To establish a performance baseline, the initial assessment uses random instruction vectors and data patterns to evaluate the fundamental capabilities of SHIFT. Simulation results exhibit successful relocations over total trials ranging from 75.2% to 97.9% across configurations, with average latency improvements of 16.4%-62.5% and a maximum of 76.8%. In addition, throughput is improved by up to 12.5x, power dissipation per unit area is reduced by ~8%, energy-per-bit is reduced by up to 58.3%, and performance is improved by 18%. To evaluate efficiency under high logic and data density, the framework was tested on standard LLM workloads. Results exhibit average improvements of 4.9x, 5.9x, and 1.8x in runtime, throughput, and energy-efficiency, respectively, surpassing state-of-the-art wafer-scale LLM services and demonstrating compatibility with large-scale platforms and applications.",
+    "authors": [
+      "Arvin Delavari",
+      "Leonid Popryho",
+      "Inna Partin-Vaisband",
+      "Boris Vaisband"
+    ],
+    "published": "2026-06-27",
+    "primary_category": "cs.AR",
+    "track": "반도체",
+    "url": "http://arxiv.org/abs/2606.28754v1",
+    "analysis": {
+      "is_relevant": true,
+      "relevance_reason": "칩렛 기반 이질적 시스템의 통신 병목을 동적 컴퓨팅 재배치로 해결하는 아키텍처로, 어드밴스드 패키징·메모리 확장·LLM 워크로드 최적화와 직결됨.",
+      "scores": {
+        "business": 4,
+        "threat": 1,
+        "demand": 4,
+        "maturity": 2,
+        "credibility": 2,
+        "novelty": 3
+      },
+      "tag": "기회",
+      "one_line": "칩렛 기반 AI 가속기의 메모리-컴퓨팅 통신 병목을 혁신적으로 해결하는 런타임 프레임워크로, HBM·CXL·어드밴스드 패키징 전략과 시너지가 높으나 학계 초기 연구 단계로 상용화까지 시간 필요.",
+      "final_score": 3.95
+    },
+    "first_seen": "2026-07-02"
   }
 }
